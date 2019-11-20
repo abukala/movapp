@@ -23,7 +23,7 @@ class MovieViewSet(ViewSet):
 
     def create(self, request):
         if 'Title' not in request.data:
-            return Response({"Title": "Field is required"})
+            return Response({"Title": "Field is required"}, status=status.HTTP_400_BAD_REQUEST)
 
         response = requests.get('http://www.omdbapi.com/?apikey=7810b313&t=%s' % request.data['Title'])
         data = response.json()
@@ -34,7 +34,7 @@ class MovieViewSet(ViewSet):
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        return Response(data, status=status.HTTP_400_BAD_REQUEST)
 
 
 class CommentViewSet(ModelViewSet):
